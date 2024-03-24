@@ -1,6 +1,7 @@
 package com.example.tourly.controller;
 import com.example.tourly.exception.EmailNotFoundException;
 import com.example.tourly.exception.UserNotFoundException;
+import com.example.tourly.model.Destination;
 import com.example.tourly.model.User;
 import com.example.tourly.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-    @CrossOrigin("http://localhost:3001")
+    @CrossOrigin("http://localhost:3000")
     @RestController
     public class UserController {
 
@@ -23,10 +24,12 @@ import java.util.Optional;
             return userRepository.save(newUser);
         }
 
+
         @GetMapping("/users")
         public List<User> getAllUsers() {
             return userRepository.findAll();
         }
+
 
         @GetMapping("/email/{email}")
         public ResponseEntity<User> getUserByEmail(@PathVariable String email) {

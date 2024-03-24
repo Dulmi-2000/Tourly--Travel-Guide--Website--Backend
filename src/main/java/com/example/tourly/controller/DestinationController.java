@@ -4,11 +4,15 @@ import com.example.tourly.exception.LocationNameNotFoundException;
 import com.example.tourly.model.Destination;
 import com.example.tourly.repository.DestinationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @CrossOrigin("http://localhost:3000")
@@ -39,15 +43,20 @@ public class DestinationController {
                 .orElseThrow(() -> new LocationNameNotFoundException(locationName));
     }
 
-
-
-    /*
-@GetMapping("/destination/{locationName}")
-Destination getDestinationbyLocationName(@PathVariable String locationName){
-    return DestinationRepository.findByLocationName(locationName)
-            .orElseThrow(()->new LocationNameNotFoundException(locationName));
-}*/
-
+    //get loctype
+    @GetMapping("/destination/image/{loctype}")
+    public ResponseEntity<List<String>> getImageLinksByLocType(@PathVariable String loctype) {
+        List<Destination> destinations = destinationRepository.findByLoctype(loctype);
+        if (!destinations.isEmpty()) {
+            List<String> imageLinks = destinations.stream()
+                    .map(Destination::getImageLink1)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(imageLinks);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.emptyList());
+        }
+    }
 
 
 
